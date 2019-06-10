@@ -1,6 +1,6 @@
 'use strict';
 
-const apiKey = 'fa54953a641b4660b4b294dcd93c176c';
+const apiKey = '';
 const searchURL = 'https://newsapi.org/v2/everything';
 
 /**
@@ -10,7 +10,7 @@ const searchURL = 'https://newsapi.org/v2/everything';
  */
 function formatQueryParams(params) {
   const queryItems = Object.keys(params)
-    .map(key => `${key}=${params[key]}`);
+    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
   return queryItems.join('&');
 }
 
