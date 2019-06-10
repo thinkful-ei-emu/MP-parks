@@ -1,6 +1,6 @@
 'use strict';
 
-const apiKey = '';
+const apiKey = 'your_api_key_here';
 const searchURL = 'https://newsapi.org/v2/everything';
 
 /**
