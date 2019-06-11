@@ -1,7 +1,7 @@
 'use strict';
 
-const apiKey = 'fa54953a641b4660b4b294dcd93c176c';
-const searchURL = 'https://newsapi.org/v2/everything';
+const apiKey = 'LCH2EJFUfLKgGkyQxyC0fUzO1yA5nw2rdAo7h8VX';
+const searchURL = 'https://developer.nps.gov/api/v1/parks';
 
 /**
  * Creates a query string from a params object
@@ -19,19 +19,19 @@ function formatQueryParams(params) {
  * @param {string} query 
  * @param {number} maxResults 
  */
-function getNews(query, maxResults=10) {
+function getNPSParks(query, maxResults=10) {
   const params = {
-    q: query,
+    stateCode: query,
     language: 'en',
+    api_key:apiKey,
+    limit:maxResults
   };
   const queryString = formatQueryParams(params);
   const url = searchURL + '?' + queryString;
+  console.log(url);
 
-  const options = {
-    headers: new Headers({'X-Api-Key': apiKey})
-  };
 
-  fetch(url, options)
+  fetch(url)
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -49,28 +49,31 @@ function getNews(query, maxResults=10) {
  * @param {object} responseJson 
  * @param {number} maxResults 
  */ 
-function displayResults(responseJson, maxResults) {
+function displayResults(responseJson, maxResults=10) {
   console.log('responseJson: ',responseJson);
   // clear the error message
   $('#js-error-message').empty();
   // if there are previous results, remove them
   $('#results-list').empty();
+  let i=0;
+
   // iterate through the articles array, stopping at the max number of results
-  responseJson.articles.forEach(article => {
+  responseJson.data.forEach(article => {
     // For each object in the articles array:
     // Add a list item to the results list with 
     // the article title, source, author,
     // description, and image
-    $('#results-list').append(
-      `
-        <li><h3><a href="${article.url}">${article.title}</a></h3>
-        <p>${article.source.name}</p>
-        <p>By ${article.author}</p>
-        <p>${article.description}</p>
-        <img src='${article.urlToImage}'>
-        </li>
-      `
-    );
+    
+    if (i<maxResults){
+      $('#results-list').append(
+        `
+          <li><h3><a href="${article.url}">${article.fullName}</a></h3>
+          <p>${article.description}</p>
+          </li>
+        `
+      );
+      i++;
+    }
   });
   // unhide the results section  
   $('#results').removeClass('hidden');
@@ -82,9 +85,10 @@ function displayResults(responseJson, maxResults) {
 function watchForm() {
   $('form').submit(event => {
     event.preventDefault();
-    const searchTerm = $('#js-search-term').val();
+    let searchTerm = $('#js-search-term').val().split(' ').filter(Boolean).join('');
+    console.log(searchTerm);
     const maxResults = $('#js-max-results').val();
-    getNews(searchTerm, maxResults);
+    getNPSParks(searchTerm, maxResults);
   });
 }
 
