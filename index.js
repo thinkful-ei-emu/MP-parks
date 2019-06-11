@@ -1,6 +1,6 @@
 'use strict';
 
-const apiKey = 'your_api_key_here';
+const apiKey = 'fa54953a641b4660b4b294dcd93c176c';
 const searchURL = 'https://newsapi.org/v2/everything';
 
 /**
@@ -56,21 +56,22 @@ function displayResults(responseJson, maxResults) {
   // if there are previous results, remove them
   $('#results-list').empty();
   // iterate through the articles array, stopping at the max number of results
-  for (let i = 0; i < responseJson.articles.length & i<maxResults ; i++){
+  responseJson.articles.forEach(article => {
     // For each object in the articles array:
     // Add a list item to the results list with 
     // the article title, source, author,
     // description, and image
     $('#results-list').append(
       `
-        <li><h3><a href="${responseJson.articles[i].url}">${responseJson.articles[i].title}</a></h3>
-        <p>${responseJson.articles[i].source.name}</p>
-        <p>By ${responseJson.articles[i].author}</p>
-        <p>${responseJson.articles[i].description}</p>
-        <img src='${responseJson.articles[i].urlToImage}'>
+        <li><h3><a href="${article.url}">${article.title}</a></h3>
+        <p>${article.source.name}</p>
+        <p>By ${article.author}</p>
+        <p>${article.description}</p>
+        <img src='${article.urlToImage}'>
         </li>
       `
-    );}
+    );
+  });
   // unhide the results section  
   $('#results').removeClass('hidden');
 }
